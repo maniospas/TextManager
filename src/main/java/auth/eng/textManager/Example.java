@@ -10,17 +10,24 @@ public class Example
 {
     public static void main( String[] args )
     {
-    	WordModel wordModel = WordModel.commonWordNet;
-    	args = new String[]{"getActionSheet", "getActionPane"};
+    	auth.eng.textManager.stemmers.InvertibleStemmer stemmer = new auth.eng.textManager.stemmers.InvertibleStemmer(new auth.eng.textManager.stemmers.PorterStemmer());
+    	WordModel wordModel = new WordModel.BagOfWords(stemmer);
+    	args = new String[]{"getActionSheetPanesPane", "getActionPanes"};
     	
     	if(args.length!=2)
     		System.out.println("Two string arguments produce their cosine similarity under WordNet features");
     	else {
+    		System.out.println("----- Features");
     		System.out.println(args[0]+" --> "+Arrays.toString(wordModel.getSentenceFeatures(args[0])));
     		System.out.println(args[1]+" --> "+Arrays.toString(wordModel.getSentenceFeatures(args[1])));
+    		System.out.println("----- Binary");
     		System.out.println(Arrays.toString(wordModel.getSentenceFeatureVector(args[0])));
     		System.out.println(Arrays.toString(wordModel.getSentenceFeatureVector(args[1])));
+    		System.out.println("----- Similarity");
 			System.out.println(similarity(wordModel.getSentenceFeatureVector(args[0]), wordModel.getSentenceFeatureVector(args[1])));
+    		System.out.println("----- Inverse Features");
+    		System.out.println(args[0]+" --> "+Arrays.toString(stemmer.getBestInterpretation(wordModel.getSentenceFeatures(args[0]))));
+    		System.out.println(args[1]+" --> "+Arrays.toString(stemmer.getBestInterpretation(wordModel.getSentenceFeatures(args[1]))));
     	}
     }
     

@@ -25,9 +25,9 @@ public abstract class WordModel {
 	/** An instantiation of {@link BagOfWords} using the {@link #commonStemmer}. */
 	public static final WordModel commonBagOfWords = new BagOfWords(commonStemmer);
 	/** An instantiation of {@link BagOfUnstemmedWords} using the {@link #commonStemmer}. */
-	public static final WordModel commonBagOfUnstemmedWords = new BagOfUnstemmedWords(commonStemmer);
+	public static final WordModel commonBagOfUnstemmedWords = new BagOfUnstemmedWords();
 	/** An instantiation of {@link BagOfPredicates} using the {@link #commonStemmer}. */
-	public static final WordModel commonBagOfPredicates = new BagOfPredicates(commonStemmer);
+	public static final WordModel commonBagOfPredicates = new BagOfPredicates();
 	/** An instantiation of {@link Bigram} using the {@link #commonStemmer}. */
 	public static final WordModel commonBigram = new Bigram(commonStemmer);
 	/** An instantiation of {@link Skipgram} using the {@link #commonStemmer}. */
@@ -54,6 +54,8 @@ public abstract class WordModel {
 	
 	public WordModel(Stemmer stemmer) {
 		this.stemmer = stemmer;
+		if(stemmer==null)
+			return;
 		stopWordStemmedSet = stopWordStemmedSetPerStemmer.get(stemmer.getClass());
 		if(stopWordStemmedSet==null) 
 			stopWordStemmedSetPerStemmer.put(stemmer.getClass(), new HashSet<String>(Arrays.asList(stem(stopwords))));
@@ -342,13 +344,13 @@ public abstract class WordModel {
 	}
 	/**
 	 * Splits into words without performing stemming.
-	 * This may result to larger and more sparce feature spaces compared to {@link BagOfWords}.
+	 * This may result to larger and more sparse feature spaces compared to {@link BagOfWords}.
 	 * @author Emmanouil Krasanakis
 	 * @see BagOfWords
 	 */
 	public static class BagOfUnstemmedWords extends WordModel {
-		public BagOfUnstemmedWords(Stemmer stemmer) {
-			super(stemmer);
+		public BagOfUnstemmedWords() {
+			super(null);
 		}
 		public String[] getSentenceFeatures(String sentence) {
 			return splitSentenceWords(sentence);
@@ -360,8 +362,8 @@ public abstract class WordModel {
 	 * @see BagOfUnstemmedWords
 	 */
 	public static class BagOfPredicates extends WordModel {
-		public BagOfPredicates(Stemmer stemmer) {
-			super(stemmer);
+		public BagOfPredicates() {
+			super(null);
 		}
 		public String[] getSentenceFeatures(String sentence) {
 			return splitSentencePredicates(sentence);
