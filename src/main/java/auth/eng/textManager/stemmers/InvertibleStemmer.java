@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 /**
- * Can be used as a wrapper around a base {{@link Stemmer} so that stems can be converted to words afterwards.
+ * Can be used as a wrapper around a base {@link Stemmer} so that stems can be converted to words afterwards.
  * @author Emmanouil Krasanakis
  * @see #getBestInterpretation(String)
  * @see #getBestInterpretation(String[])
@@ -12,7 +12,10 @@ import java.util.Map.Entry;
 public class InvertibleStemmer implements Stemmer {
 	private Stemmer baseStemmer;
 	private HashMap<String, HashMap<String, Integer>> inverseDictionary = new HashMap<String, HashMap<String, Integer>>();
-	
+
+	public String getName() {
+		return "Invertible"+baseStemmer.getName();
+    }
 	public InvertibleStemmer(Stemmer baseStemmer) {
 		this.baseStemmer = baseStemmer;
 	}

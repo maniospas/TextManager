@@ -26,6 +26,10 @@ import java.util.*;
  * @author Eibe Frank
  */
 public class LovinsStemmer implements Stemmer {
+  public String getName() {
+	  return "LovinsStemmer";
+  }
+ 
 
   /** Enters C version compatibility mode if set to true (emulates
       features of the original C implementation that are inconsistent

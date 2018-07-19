@@ -26,8 +26,8 @@ public class Example
     		System.out.println("----- Similarity");
 			System.out.println(similarity(wordModel.getSentenceFeatureVector(args[0]), wordModel.getSentenceFeatureVector(args[1])));
     		System.out.println("----- Inverse Features");
-    		System.out.println(args[0]+" --> "+Arrays.toString(stemmer.getBestInterpretation(wordModel.getSentenceFeatures(args[0]))));
-    		System.out.println(args[1]+" --> "+Arrays.toString(stemmer.getBestInterpretation(wordModel.getSentenceFeatures(args[1]))));
+    		System.out.println(args[0]+" --> "+Arrays.toString(((auth.eng.textManager.stemmers.InvertibleStemmer)wordModel.getStemmer()).getBestInterpretation(wordModel.getSentenceFeatures(args[0]))));
+    		System.out.println(args[1]+" --> "+Arrays.toString(((auth.eng.textManager.stemmers.InvertibleStemmer)wordModel.getStemmer()).getBestInterpretation(wordModel.getSentenceFeatures(args[1]))));
     	}
     }
     

@@ -6,6 +6,10 @@ package auth.eng.textManager.stemmers;
  * @author Porter, 1980, An algorithm for suffix stripping
  */
 public class PorterStemmer implements Stemmer {
+	
+	  public String getName() {
+		  return "PorterStemmer";
+	  }
 	  
 	  public String stem(String word) {
 		    InternalPorterStemmer s = new InternalPorterStemmer();
