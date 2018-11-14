@@ -331,6 +331,30 @@ public abstract class WordModel {
 		}
 	}
 	/**
+	 * Combines every {@link NGram} up to the given N (e.g. for N=3, it includes 1-Grams, 2-Gram and 3-Grams as features).
+	 * @author Emmanouil Krasanakis
+	 */
+	public static class MultiGram extends WordModel {
+		private int N;
+		public MultiGram(int N, Stemmer stemmer) {
+			super(stemmer);
+			this.N = N;
+		}
+		@Override
+		public String[] getSentenceFeatures(String sentence) {
+			ArrayList<String> words = new ArrayList<String>();
+			for(int n=1;n<=N;n++) {
+				NGram ngram = new NGram(n, getStemmer());
+				for(String word : ngram.getSentenceFeatures(sentence))
+					words.add(word);
+			}
+			String[] grams = new String[words.size()];
+			for(int i=0;i<grams.length;i++)
+				grams[i] = words.get(i);
+			return grams;
+		}
+	} 
+	/**
 	 * Generates bigrams by grouping every pair of consecutive words
 	 * (e.g. the words ABCD form the bigrams AB, BC, CD).
 	 * Words are stemmed before grouping.
