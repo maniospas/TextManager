@@ -1,10 +1,7 @@
 package auth.eng.textManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import auth.eng.textManager.stemmers.Stemmer;
@@ -22,13 +19,9 @@ public abstract class WordModel {
 	// ------------- STATIC PROPERTIES
 	protected static final Pattern wordPattern = Pattern.compile("(?=\\p{Lu})|\\s+");//used to split words
 	protected static final Pattern purePattern = Pattern.compile("[^A-Za-z0-9 ]");//used to remove non-textual information
-	//TODO: stopwords should be static, but this causes a null pointer exception somehow
-	private final String[] stopwords = {"a", "as", "able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", "again", "against", "aint", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", "am", "among", "amongst", "an", "and", "another", "any", "anybody", "anyhow", "anyone", "anything", "anyway", "anyways", "anywhere", "apart", "appear", "appreciate", "appropriate", "are", "arent", "around", "as", "aside", "ask", "asking", "associated", "at", "available", "away", "awfully", "be", "became", "because", "become", "becomes", "becoming", "been", "before", "beforehand", "behind", "being", "believe", "below", "beside", "besides", "best", "better", "between", "beyond", "both", "brief", "but", "by", "cmon", "cs", "came", "can", "cant", "cannot", "cant", "cause", "causes", "certain", "certainly", "changes", "clearly", "co", "com", "come", "comes", "concerning", "consequently", "consider", "considering", "contain", "containing", "contains", "corresponding", "could", "couldnt", "course", "currently", "definitely", "described", "despite", "did", "didnt", "different", "do", "does", "doesnt", "doing", "dont", "done", "down", "downwards", "during", "each", "edu", "eg", "eight", "either", "else", "elsewhere", "enough", "entirely", "especially", "et", "etc", "even", "ever", "every", "everybody", "everyone", "everything", "everywhere", "ex", "exactly", "example", "except", "far", "few", "ff", "fifth", "first", "five", "followed", "following", "follows", "for", "former", "formerly", "forth", "four", "from", "further", "furthermore", "get", "gets", "getting", "given", "gives", "go", "goes", "going", "gone", "got", "gotten", "greetings", "had", "hadnt", "happens", "hardly", "has", "hasnt", "have", "havent", "having", "he", "hes", "hello", "help", "hence", "her", "here", "heres", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "hi", "him", "himself", "his", "hither", "hopefully", "how", "howbeit", "however", "i", "id", "ill", "im", "ive", "ie", "if", "ignored", "immediate", "in", "inasmuch", "inc", "indeed", "indicate", "indicated", "indicates", "inner", "insofar", "instead", "into", "inward", "is", "isnt", "it", "itd", "itll", "its", "its", "itself", "just", "keep", "keeps", "kept", "know", "knows", "known", "last", "lately", "later", "latter", "latterly", "least", "less", "lest", "let", "lets", "like", "liked", "likely", "little", "look", "looking", "looks", "ltd", "mainly", "many", "may", "maybe", "me", "mean", "meanwhile", "merely", "might", "more", "moreover", "most", "mostly", "much", "must", "my", "myself", "name", "namely", "nd", "near", "nearly", "necessary", "need", "needs", "neither", "never", "nevertheless", "new", "next", "nine", "no", "nobody", "non", "none", "noone", "nor", "normally", "not", "nothing", "novel", "now", "nowhere", "obviously", "of", "off", "often", "oh", "ok", "okay", "old", "on", "once", "one", "ones", "only", "onto", "or", "other", "others", "otherwise", "ought", "our", "ours", "ourselves", "out", "outside", "over", "overall", "own", "particular", "particularly", "per", "perhaps", "placed", "please", "plus", "possible", "presumably", "probably", "provides", "que", "quite", "qv", "rather", "rd", "re", "really", "reasonably", "regarding", "regardless", "regards", "relatively", "respectively", "right", "said", "same", "saw", "say", "saying", "says", "second", "secondly", "see", "seeing", "seem", "seemed", "seeming", "seems", "seen", "self", "selves", "sensible", "sent", "serious", "seriously", "seven", "several", "shall", "she", "should", "shouldnt", "since", "six", "so", "some", "somebody", "somehow", "someone", "something", "sometime", "sometimes", "somewhat", "somewhere", "soon", "sorry", "specified", "specify", "specifying", "still", "sub", "such", "sup", "sure", "ts", "take", "taken", "tell", "tends", "th", "than", "thank", "thanks", "thanx", "that", "thats", "thats", "the", "their", "theirs", "them", "themselves", "then", "thence", "there", "theres", "thereafter", "thereby", "therefore", "therein", "theres", "thereupon", "these", "they", "theyd", "theyll", "theyre", "theyve", "think", "third", "this", "thorough", "thoroughly", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "took", "toward", "towards", "tried", "tries", "truly", "try", "trying", "twice", "two", "un", "under", "unfortunately", "unless", "unlikely", "until", "unto", "up", "upon", "us", "use", "used", "useful", "uses", "using", "usually", "value", "various", "very", "via", "viz", "vs", "want", "wants", "was", "wasnt", "way", "we", "wed", "well", "were", "weve", "welcome", "well", "went", "were", "werent", "what", "whats", "whatever", "when", "whence", "whenever", "where", "wheres", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whos", "whoever", "whole", "whom", "whose", "why", "will", "willing", "wish", "with", "within", "without", "wont", "wonder", "would", "would", "wouldnt", "yes", "yet", "you", "youd", "youll", "youre", "youve", "your", "yours", "yourself", "yourselves", "zero"};
-	private HashMap<String, Set<String>> stopWordStemmedSetPerStemmer = new HashMap<String, Set<String>>();
 
 	// ------------- WORD MODEL PROPERTIES
 	private Stemmer stemmer;
-	private Set<String> stopWordStemmedSet;
 	private HashMap<String, Integer> wordId = new HashMap<String, Integer>();
 	private HashMap<Integer,String> wordText = new HashMap<Integer, String>();
 	
@@ -36,9 +29,6 @@ public abstract class WordModel {
 		this.stemmer = stemmer;
 		if(stemmer==null)
 			throw new RuntimeException("null stemmer no longer supported. Use NoStemmer() instead.");
-		stopWordStemmedSet = stopWordStemmedSetPerStemmer.get(stemmer.getName());
-		if(stopWordStemmedSet==null) 
-			stopWordStemmedSetPerStemmer.put(stemmer.getName(), new HashSet<String>(Arrays.asList(stem(stopwords))));
 	}
 	/**
 	 * @return the {@link Stemmer} used by the model (some models don't use a stemmer)
@@ -154,8 +144,10 @@ public abstract class WordModel {
 		String[] allWords = wordPattern.split(purePattern.matcher(sentence).replaceAll(" "));//sentence.split("(?=\\p{Lu})|(\\_|\\,|\\.|\\s|\\n|\\#|\\\"|\\{|\\}|\\@|\\(|\\)|\\;|\\-|\\:|\\*|\\\\|\\/)+");
 		ArrayList<String> words = new ArrayList<String>();
 		for(String word : allWords)
-			if(!word.isEmpty() && word.length()>=2) {
-				words.add( stemmer.stem(word.toLowerCase()));
+			if(!word.isEmpty()) {
+				String w = stemmer.stem(word);
+				if(w!=null)
+					words.add(w);
 			}
 		return (String[])words.toArray(new String[words.size()]);
 	}
@@ -163,8 +155,10 @@ public abstract class WordModel {
 		String[] allWords = wordPattern.split(purePattern.matcher(sentence).replaceAll(" "));//sentence.split("(?=\\p{Lu})|(\\_|\\,|\\.|\\s|\\n|\\#|\\\"|\\{|\\}|\\@|\\(|\\)|\\;|\\-|\\:|\\*|\\\\|\\/)+");
 		ArrayList<String> words = new ArrayList<String>();
 		for(String word : allWords)
-			if(!word.isEmpty() && word.length()>=2) {
-				words.add( stemmer.stem(word.toLowerCase()));
+			if(!word.isEmpty()) {
+				String w = stemmer.stem(word);
+				if(w!=null)
+					words.add(w);
 			}
 		return (String[])words.toArray(new String[words.size()]);
 	}
@@ -199,22 +193,6 @@ public abstract class WordModel {
 		for(int i=0;i<words.length;i++)
 			stemmed[i] = stemmer.stem(words[i]);
 		return stemmed;
-	}
-	final protected boolean isStopword(String word) {//optimized for lower-case words
-		if(word.isEmpty())
-			return true;
-		if(word.charAt(0) >= '0' && word.charAt(0) <= '9')
-			return true;
-		if(stopWordStemmedSet.contains(stem(word)))
-			return true;
-		return false;
-	}
-	final protected String[] removeStopwords(String[] words) {
-		ArrayList<String> ret = new ArrayList<String>(words.length);
-		for(String word : words)
-			if(word.length()>=2 && !isStopword(word))
-				ret.add(word);
-		return ret.toArray(new String[ret.size()]);
 	}
 	public static String mergeToSentence(String[] words) {
 		if(words.length==0)
@@ -397,81 +375,5 @@ public abstract class WordModel {
 					grams[i*window+j] = words[i]+" "+words[i+j+1];
 			return grams;
 		}
-	}
-	/**
-	 * Removes all stopwords (including words whose stem is less than 2 characters long) and then generates bigrams.
-	 * @author Emmanouil Krasanakis
-	 * @see Bigram
-	 */
-	public static class BigramWithoutStopwords extends WordModel {
-		public BigramWithoutStopwords(Stemmer stemmer) {
-			super(stemmer);
-		}
-		public String[] getSentenceFeatures(String sentence) {
-			String[] words = splitStemSentenceWords(sentence);
-			words = removeStopwords(words);
-			if(words.length==0)
-				return new String[0];
-			String[] grams = new String[words.length-1];
-			for(int i=0;i<grams.length;i++)
-				grams[i] = words[i]+" "+words[i+1];
-			return grams;
-		}
-	}
-	/**
-	 * Generates phrase trigrams, which essentially expand trigrams so as not to end on stopwords.
-	 * <b>Phrase trigrams are compared using {@link LevenshteinDistance}</b>.
-	 * @author Emmanouil Krasanakis
-	 * @see NGram
-	 */
-	public static class PhraseTrigram extends WordModel {
-		public PhraseTrigram(Stemmer stemmer) {
-			super(stemmer);
-		}
-		public String[] extractPhrases(String sentence) {
-			//System.out.println(sentence);
-			String[] words = splitSentenceWords(sentence);
-			String[] stemmedWords = stem(words);
-			if(words.length<=2) {
-				if(words.length==0)
-					return new String[0];
-				String[] ret = new String[1];
-				StringBuilder builder = new StringBuilder();
-				builder.append(stemmedWords[0]);
-				if(words.length>1)
-					builder.append(" ").append(stemmedWords[1]);
-				ret[0] = builder.toString();
-				return ret;
-			}
-			String[] grams = new String[words.length-2];
-			for(int i=0;i<words.length-2;i++){
-				int first = i;
-				int last = i+2;
-				while(isStopword(words[last]) && last<words.length-1)
-					last++;
-				while(isStopword(words[first]) && first>0)
-					first--;
-				StringBuilder builder = new StringBuilder();
-				builder.append(stemmedWords[first]);
-				for(int j=first+1;j<=last;j++)
-					builder.append(" ").append(stemmedWords[j]);
-				grams[i] = builder.toString();
-				//System.out.println(grams[i]);
-				i = last-1;
-			}
-			return grams;
-		}
-		@Override
-		public String[] getSentenceFeatures(String sentence) {
-			return extractPhrases(sentence);
-		}
-		@Override
-		public boolean equal(String word1, String word2) {
-			if(word1==null || word2==null)
-				return false;
-			int distance = LevenshteinDistance.computeLevenshteinSentenceDistance(word1.split("\\s"), word2.split("\\s"));
-			return distance<=1;
-		}
-		
 	}
 }

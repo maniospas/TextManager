@@ -10,9 +10,9 @@ public class Example
 {
     public static void main( String[] args )
     {
-    	auth.eng.textManager.stemmers.InvertibleStemmer stemmer = new auth.eng.textManager.stemmers.InvertibleStemmer(new auth.eng.textManager.stemmers.PorterStemmer());
+    	auth.eng.textManager.stemmers.InvertibleStemmer stemmer = new auth.eng.textManager.stemmers.InvertibleStemmer(new auth.eng.textManager.stemmers.StopwordRemove(new auth.eng.textManager.stemmers.PorterStemmer()));
     	WordModel wordModel = new WordModel.BagOfWords(stemmer);
-    	args = new String[]{"getActionSheetPanesPane", "getActionPanes"};
+    	args = new String[]{"getActionSheetPanesPane", "getActionToPanes"};
     	
     	if(args.length!=2)
     		System.out.println("Two string arguments produce their cosine similarity under WordNet features");
