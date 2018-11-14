@@ -12,8 +12,9 @@ import net.sf.extjwnl.data.list.PointerTargetNodeList;
 import net.sf.extjwnl.dictionary.Dictionary;
 
 /**
- * Word model, which can split text into sentences and individual words. Besides spaces, camel and hungarian notation are further splitted into words.
+ * Word model, which can split text into sentences and individual words. Besides spaces, camel and Hungarian notations are further split into words.
  * @author Emmanouil Krasanakis
+ * @version Stopword removal is handled through a {@link auth.eng.textManager.stemmers.StopwordRemove} stemmer.
  */
 public abstract class WordModel {
 	// ------------- STATIC PROPERTIES
