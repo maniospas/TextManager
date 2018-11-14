@@ -165,7 +165,7 @@ public abstract class WordModel {
 		char[] s = sentence.toCharArray();
 		char[] sPrepared = sentence.toCharArray();
 		for(int i=0;i<s.length;i++)
-			if((i==0||!Character.isAlphabetic(s[i-1])||Character.isUpperCase(s[i-1])) && (Character.isUpperCase(s[i+1])||!Character.isAlphabetic(s[i+1])||i==s.length-1) && Character.isUpperCase(s[i]))
+			if((i==0||!Character.isAlphabetic(s[i-1])||Character.isUpperCase(s[i-1])) && (i+1>=s.length||Character.isUpperCase(s[i+1])||!Character.isAlphabetic(s[i+1])||i==s.length-1) && Character.isUpperCase(s[i]))
 				sPrepared[i] = Character.toLowerCase(s[i]);
 		return new String(sPrepared);
 	}
