@@ -19,26 +19,6 @@ import net.sf.extjwnl.dictionary.Dictionary;
  * @author Emmanouil Krasanakis
  */
 public abstract class WordModel {
-	// ------------- WORD MODEL INSTANTIATIONS
-	/** A Porter stemmer instantiation.*/
-	private static final Stemmer commonStemmer = new auth.eng.textManager.stemmers.PorterStemmer();
-	/** An instantiation of {@link BagOfWords} using the {@link #commonStemmer}. */
-	public static final WordModel commonBagOfWords = new BagOfWords(commonStemmer);
-	/** An instantiation of {@link BagOfUnstemmedWords} using the {@link #commonStemmer}. */
-	public static final WordModel commonBagOfUnstemmedWords = new BagOfUnstemmedWords();
-	/** An instantiation of {@link BagOfPredicates} using the {@link #commonStemmer}. */
-	public static final WordModel commonBagOfPredicates = new BagOfPredicates();
-	/** An instantiation of {@link Bigram} using the {@link #commonStemmer}. */
-	public static final WordModel commonBigram = new Bigram(commonStemmer);
-	/** An instantiation of {@link Skipgram} using the {@link #commonStemmer}. */
-	public static final WordModel commonSkipgram = new Skipgram(commonStemmer);
-	/** An instantiation of {@link BigramWithoutStopwords} using the {@link #commonStemmer}. */
-	public static final WordModel commonBigramWithoutStopwords = new BigramWithoutStopwords(commonStemmer);
-	/** An instantiation of {@link PhraseTrigram} using the {@link #commonStemmer}. */
-	public static final WordModel commonPhraseTrigram = new PhraseTrigram(commonStemmer);
-	/** An instantiation of {@link BagOfWordNet} using the {@link #commonStemmer}. */
-	public static final WordModel commonWordNet = new BagOfWordNet(commonStemmer);
-	
 	// ------------- STATIC PROPERTIES
 	protected static final Pattern wordPattern = Pattern.compile("(?=\\p{Lu})|\\s+");//used to split words
 	protected static final Pattern purePattern = Pattern.compile("[^A-Za-z0-9 ]");//used to remove non-textual information
@@ -55,7 +35,7 @@ public abstract class WordModel {
 	public WordModel(Stemmer stemmer) {
 		this.stemmer = stemmer;
 		if(stemmer==null)
-			return;
+			throw new RuntimeException("null stemmer no longer supported. Use NoStemmer() instead.");
 		stopWordStemmedSet = stopWordStemmedSetPerStemmer.get(stemmer.getName());
 		if(stopWordStemmedSet==null) 
 			stopWordStemmedSetPerStemmer.put(stemmer.getName(), new HashSet<String>(Arrays.asList(stem(stopwords))));
@@ -229,26 +209,10 @@ public abstract class WordModel {
 			return true;
 		return false;
 	}
-	final protected boolean isStemmedStopword(String word) {//optimized for lower-case words
-		if(word.isEmpty())
-			return true;
-		if(word.charAt(0) >= '0' && word.charAt(0) <= '9')
-			return true;
-		if(stopWordStemmedSet.contains(word))
-			return true;
-		return false;
-	}
 	final protected String[] removeStopwords(String[] words) {
 		ArrayList<String> ret = new ArrayList<String>(words.length);
 		for(String word : words)
 			if(word.length()>=2 && !isStopword(word))
-				ret.add(word);
-		return ret.toArray(new String[ret.size()]);
-	}
-	final protected String[] removeStemmedStopwords(String[] words) {
-		ArrayList<String> ret = new ArrayList<String>(words.length);
-		for(String word : words)
-			if(word.length()>=2 && !isStemmedStopword(word))
 				ret.add(word);
 		return ret.toArray(new String[ret.size()]);
 	}
@@ -338,7 +302,6 @@ public abstract class WordModel {
 	/**
 	 * Splits into words and stems them.
 	 * @author Emmanouil Krasanakis
-	 * @see BagOfUnstemmedWords
 	 */
 	public static class BagOfWords extends WordModel {
 		public BagOfWords(Stemmer stemmer) {
@@ -346,33 +309,6 @@ public abstract class WordModel {
 		}
 		public String[] getSentenceFeatures(String sentence) {
 			return splitStemSentenceWords(sentence);
-		}
-	}
-	/**
-	 * Splits into words without performing stemming.
-	 * This may result to larger and more sparse feature spaces compared to {@link BagOfWords}.
-	 * @author Emmanouil Krasanakis
-	 * @see BagOfWords
-	 */
-	public static class BagOfUnstemmedWords extends WordModel {
-		public BagOfUnstemmedWords() {
-			super(null);
-		}
-		public String[] getSentenceFeatures(String sentence) {
-			return splitSentenceWords(sentence);
-		}
-	}
-	/**
-	 * Splits a string into words but keeps even empty words.
-	 * @author Emmanouil Krasanakis
-	 * @see BagOfUnstemmedWords
-	 */
-	public static class BagOfPredicates extends WordModel {
-		public BagOfPredicates() {
-			super(null);
-		}
-		public String[] getSentenceFeatures(String sentence) {
-			return splitSentencePredicates(sentence);
 		}
 	}
 	/**
@@ -473,7 +409,7 @@ public abstract class WordModel {
 		}
 		public String[] getSentenceFeatures(String sentence) {
 			String[] words = splitStemSentenceWords(sentence);
-			words = removeStemmedStopwords(words);
+			words = removeStopwords(words);
 			if(words.length==0)
 				return new String[0];
 			String[] grams = new String[words.length-1];
